@@ -5,6 +5,44 @@ const decryptBtn = document.getElementById('decryptBtn');
 const outputDiv = document.getElementById('output');
 const selectedFileNameSpan = document.getElementById('selectedFileName');
 const generateKeyBtn = document.getElementById('generateKeyBtn');
+document.getElementById('privateKey').addEventListener('input', updateKeyStrengthIndicator)
+
+function updateKeyStrengthIndicator() {
+  const privateKeyInput = document.getElementById('privateKey');
+  const indicator = document.getElementById('keyStrengthIndicator');
+
+  const key = privateKeyInput.value;
+  let strengthText = '';
+
+  if (key.length === 0) {
+    strengthText = 'Please enter a key';
+  } else {
+    const result = zxcvbn(key);
+    const score = result.score;
+    const feedback = result.feedback.warning || '';
+
+    switch (score) {
+      case 0:
+        strengthText = 'Very Weak';
+        break;
+      case 1:
+        strengthText = 'Weak';
+        break;
+      case 2:
+        strengthText = 'Moderate';
+        break;
+      case 3:
+        strengthText = 'Strong';
+        break;
+      case 4:
+        strengthText = 'Very Strong';
+        break;
+    }
+
+  }
+
+  indicator.textContent = `Key Strength: ${strengthText}`;
+}
 
 // Function to generate a secure random key
 async function generateSecureKey() {
@@ -29,6 +67,7 @@ generateKeyBtn.addEventListener('click', async () => {
   const randomKey = await generateSecureKey();
   if (randomKey) {
     privateKeyInput.value = randomKey;
+    updateKeyStrengthIndicator()
   } else {
     console.error('Failed to generate a secure random key.');
   }
@@ -48,24 +87,25 @@ togglePasswordVisibility.addEventListener('click', () => {
 document.getElementById('dragAndDropBox').addEventListener('click', function() {
   document.getElementById('fileInput').click();
 });
-
-document.getElementById('dragAndDropBox').addEventListener('drop', function(event) {
-  event.preventDefault();
-  const files = event.dataTransfer.files;
-  if (files.length > 0) {
-    fileInput.files = files; // Set the files property of the FileInput element
-    handleFile(files[0]);
-  }
-});
-
 document.getElementById('dragAndDropBox').addEventListener('dragover', function(event) {
   event.preventDefault();
 });
-
-document.getElementById('fileInput').addEventListener('change', function() {
-  const file = this.files[0];
-  handleFile(file);
+document.getElementById('dragAndDropBox').addEventListener('drop', function(event) {
+  event.preventDefault();
+  const files = event.dataTransfer.files;
+  handleFiles(files);
 });
+document.getElementById('fileInput').addEventListener('change', function() {
+  handleFiles(this.files);
+});
+function handleFiles(files) {
+  const file = files[0];
+  if (file) {
+    fileInput.files = files; // This step is required to sync the files list with input for form submissions
+    selectedFileNameSpan.textContent = file.name; // Update the span with file name
+    handleFile(file);
+  }
+}
 
 function handleFile(file) {
   if (file) {
@@ -115,6 +155,7 @@ async function encryptFile(file) {
   const url = URL.createObjectURL(encryptedBlob);
   const link = createDownloadLink(url, `${file.name}.encrypted`, 'Download Encrypted File');
   showOutput(link, 'success');
+  clearFileInput();
 
   // Toggle button classes
   decryptBtn.classList.remove('btn-decrypt');
@@ -137,9 +178,12 @@ async function decryptFile(file) {
   const url = URL.createObjectURL(decryptedBlob);
   const link = createDownloadLink(url, `${file.name.replace(/\.encrypted$/, '')}`, 'Download Decrypted File');
   showOutput(link, 'success');
+  clearFileInput();
 
   // Toggle button classes
   toggleButtonClasses(false);
+  decryptBtn.classList.add('def');
+  encryptBtn.classList.add('def');
 }
 
 function toggleButtonClasses(isEncrypted) {
@@ -158,7 +202,7 @@ function readFileAsArrayBuffer(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = () => resolve(reader.result);
-    reader.onerror = reject;
+    reader.onerror = () => reject(reader.error); // Update this line to handle errors better.
     reader.readAsArrayBuffer(file);
   });
 }
@@ -277,6 +321,12 @@ function showOutput(content, type) {
   }
 
   outputDiv.appendChild(outputElement);
+}
+
+function clearFileInput() {
+  // Function to clear the file input and the displayed file name
+  fileInput.value = ''; // Clear input
+  selectedFileNameSpan.textContent = ''; // Clear file name display
 }
 
 

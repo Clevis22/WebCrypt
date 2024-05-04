@@ -17,7 +17,7 @@ Dependencies
 WebCrypt relies on the following dependencies:
 
 *   **Web Crypto API**: A browser API that provides cryptographic primitives and utilities for performing various cryptographic operations, including key generation, encryption, and decryption.
-*   **Bootstrap**: a free and open-source CSS framework directed at responsive, mobile-first front-end web development. It is Used for styling the UI.
+*   **Bootstrap**: A free and open-source CSS framework directed at responsive, mobile-first front-end web development. It is Used for styling the UI.
 
 Key Management
 --------------
