@@ -251,9 +251,6 @@ async function encryptWithKey(data, passphrase) {
 
 async function decryptWithKey(data, passphrase) {
   try {
-    console.log('Decrypting data with passphrase:', passphrase);
-    console.log('Encrypted data:', data);
-
     const encoder = new TextEncoder();
     const encodedPassphrase = encoder.encode(passphrase);
 
@@ -284,7 +281,7 @@ async function decryptWithKey(data, passphrase) {
       ['decrypt']
     );
 
-    return await window.crypto.subtle.decrypt(
+    const decryptedData = await window.crypto.subtle.decrypt(
       {
         name: 'AES-GCM',
         iv: iv,
@@ -292,9 +289,12 @@ async function decryptWithKey(data, passphrase) {
       keyMaterial,
       encryptedData
     );
+
+    return decryptedData;
   } catch (error) {
     console.error('Error decrypting data:', error);
-    throw new Error('Decryption failed');
+    showOutput('Decryption failed. Please ensure you have entered the correct private key.', 'danger');
+    throw error;
   }
 }
 
