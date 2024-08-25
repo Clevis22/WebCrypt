@@ -51,10 +51,6 @@ While WebCrypt provides a secure client-side encryption solution, it's important
 
 Please note that WebCrypt is a proof-of-concept application and is not intended for production use. It is recommended to use a production-ready encryption solution for sensitive data protection.
 
-Contributions
---------------
-
-Contributions to WebCrypt are welcome. Please refer to the [CONTRIBUTING.md](CONTRIBUTING.md) for more information on how to contribute to WebCrypt.
 
 License
 --------
