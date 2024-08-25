@@ -211,42 +211,48 @@ async function encryptWithKey(data, passphrase) {
   const encoder = new TextEncoder();
   const encodedPassphrase = encoder.encode(passphrase);
 
-  const derivedKey = await window.crypto.subtle.importKey(
-    'raw',
-    encodedPassphrase,
-    {
-      name: 'PBKDF2',
-    },
-    false,
-    ['deriveBits', 'deriveKey']
-  );
+  try {
+    const derivedKey = await window.crypto.subtle.importKey(
+      'raw',
+      encodedPassphrase,
+      {
+        name: 'PBKDF2',
+      },
+      false,
+      ['deriveBits', 'deriveKey']
+    );
 
-  const salt = window.crypto.getRandomValues(new Uint8Array(16)); // Generate a random salt
-  const keyMaterial = await window.crypto.subtle.deriveKey(
-    {
-      name: 'PBKDF2',
-      salt: salt,
-      iterations: 100000,
-      hash: 'SHA-256',
-    },
-    derivedKey,
-    { name: 'AES-GCM', length: 256 },
-    true,
-    ['encrypt']
-  );
+    const salt = window.crypto.getRandomValues(new Uint8Array(16)); // Generate a random salt
+    const keyMaterial = await window.crypto.subtle.deriveKey(
+      {
+        name: 'PBKDF2',
+        salt: salt,
+        iterations: 100000,
+        hash: 'SHA-256',
+      },
+      derivedKey,
+      { name: 'AES-GCM', length: 256 },
+      true,
+      ['encrypt']
+    );
 
-  const iv = window.crypto.getRandomValues(new Uint8Array(12));
-  const encryptedData = await window.crypto.subtle.encrypt(
-    {
-      name: 'AES-GCM',
-      iv: iv,
-    },
-    keyMaterial,
-    data
-  );
+    const iv = window.crypto.getRandomValues(new Uint8Array(12));
+    const encryptedData = await window.crypto.subtle.encrypt(
+      {
+        name: 'AES-GCM',
+        iv: iv,
+      },
+      keyMaterial,
+      data
+    );
 
-  const encryptedDataWithIV = new Uint8Array([...salt, ...iv, ...new Uint8Array(encryptedData)]);
-  return encryptedDataWithIV;
+    const encryptedDataWithIV = new Uint8Array([...salt, ...iv, ...new Uint8Array(encryptedData)]);
+    return encryptedDataWithIV;
+  } catch (error) {
+    console.error('Error encrypting data:', error);
+    showOutput('Encryption failed. Please ensure you have entered the correct private key.', 'danger');
+    throw error;
+  }
 }
 
 async function decryptWithKey(data, passphrase) {
@@ -300,11 +306,16 @@ async function decryptWithKey(data, passphrase) {
 
 
 function createDownloadLink(url, fileName, linkText) {
-  const link = document.createElement('a');
-  link.href = url;
-  link.download = fileName;
-  link.innerText = linkText;
-  return link;
+  try {
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = fileName;
+    link.innerText = linkText;
+    return link;
+  } catch (error) {
+    console.error('Error creating download link:', error);
+    return null;
+  }
 }
 
 function showOutput(content, type) {

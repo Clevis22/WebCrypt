@@ -30,15 +30,7 @@ WebCrypt does not provide a built-in mechanism for key management or key exchang
 *   Consider using a secure key management system or a hardware security module (HSM) for storing and managing private keys, especially in enterprise or high-security environments.
 *   If you need to share encrypted files with others, establish a secure method for exchanging the private key, such as using a separate encrypted channel or a secure key exchange protocol.
 
-Limitations
------------
-
-While WebCrypt provides a secure client-side encryption solution, it's important to note the following limitations:
-
-*   The security of the application relies heavily on the user's browser and the integrity of the JavaScript code.
-*   The application does not provide any mechanisms for verifying the integrity or authenticity of the encrypted files.
-
-Security Considerations
+Proper and Secure Usage
 -----------------------
 
 To ensure the security of your data when using WebCrypt, it is recommended to:
@@ -47,3 +39,32 @@ To ensure the security of your data when using WebCrypt, it is recommended to:
 *   Keep your private key secure and never share it with untrusted parties.
 *   Verify the integrity of the downloaded encrypted or decrypted files before using them.
 *   Use WebCrypt on a trusted and secure device and network.
+*   Keep your WebCrypt installation up to date to benefit from the latest security updates and improvements.
+
+Limitations
+------------
+
+While WebCrypt provides a secure client-side encryption solution, it's important to note the following limitations:
+
+*   The security of the application relies heavily on the user's browser and the integrity of the JavaScript code.
+*   The application does not provide any mechanisms for verifying the integrity or authenticity of the encrypted files.
+
+Please note that WebCrypt is a proof-of-concept application and is not intended for production use. It is recommended to use a production-ready encryption solution for sensitive data protection.
+
+Contributions
+--------------
+
+Contributions to WebCrypt are welcome. Please refer to the [CONTRIBUTING.md](CONTRIBUTING.md) for more information on how to contribute to WebCrypt.
+
+License
+--------
+
+MIT License
+
+Copyright (c) [2024] [Kieran Gannon]
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
